@@ -1,0 +1,622 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>UmbrioX (᪣UBX)</title>
+  <link rel="icon" type="image/png" href="/ico.png"/>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <style>
+    body {
+      margin: 0;
+      font-family: sans-serif;
+      background-color: black;
+      color: white;
+      padding: 1.5rem;
+      overflow-x: hidden;
+      position: relative;
+    }
+    canvas.starfield {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100vw;
+      height: 100vh;
+      z-index: 0;
+      pointer-events: none;
+    }
+    h1 {
+      text-align: center;
+      font-size: 3rem;
+      color: #c084fc;
+    }
+    a.button {
+      display: inline-block;
+      margin: 1rem auto;
+      padding: 0.75rem 1.5rem;
+      background: linear-gradient(to right, #7e22ce, #4f46e5);
+      border-radius: 9999px;
+      color: white;
+      font-weight: bold;
+      text-decoration: none;
+      box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
+      transition: transform 0.2s;
+    }
+    a.button:hover {
+      transform: scale(1.05);
+    }
+    .card {
+      background-color: #1f2937;
+      border-radius: 1rem;
+      padding: 1.5rem;
+      margin: 2rem auto;
+      max-width: 800px;
+      z-index: 1;
+      position: relative;
+    }
+    .price {
+      font-size: 2rem;
+      font-weight: bold;
+      color: #4ade80;
+    }
+    .price-change {
+      font-size: 1.2rem;
+    }
+    .price-change.up {
+      color: #4ade80;
+    }
+    .price-change.down {
+      color: #f87171;
+    }
+    canvas#chart {
+      max-width: 100%;
+      height: 300px;
+    }
+    .about {
+      background-color: #111827;
+      border-radius: 1rem;
+      padding: 1.5rem;
+      margin-top: 2rem;
+      max-width: 800px;
+      margin-left: auto;
+      margin-right: auto;
+      z-index: 1;
+      position: relative;
+    }
+    .galaxy-title {
+      cursor: pointer;
+      transition: all 0.5s ease;
+      background-image: linear-gradient(90deg, #7e22ce, #4f46e5, #0ea5e9, #38bdf8, #7e22ce);
+      background-size: 300%;
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      display: inline-block;
+      margin-left: 0.5rem;
+    }
+    .galaxy-title:hover {
+      animation: galaxy-shimmer 4s infinite linear;
+      background-position: 200%;
+    }
+    @keyframes galaxy-shimmer {
+      0% { background-position: 0%; }
+      100% { background-position: 300%; }
+    }
+    .rocket {
+      display: inline-block;
+      transition: transform 0.4s ease, opacity 0.4s ease;
+      margin-right: 0.5rem;
+      font-size: 1.2em;
+      position: relative;
+      cursor: pointer;
+      user-select: none;
+      bottom: 0;
+      opacity: 1;
+      z-index: 2;
+    }
+    .launch-up {
+      animation: launchUp 3s ease-in forwards;
+    }
+    .hidden {
+      opacity: 0;
+    }
+    .fall-down {
+      animation: fallDown 5s ease-out forwards;
+    }
+    @keyframes launchUp {
+      0% { bottom: 0; opacity: 1; }
+      100% { bottom: 600px; opacity: 1; }
+    }
+    @keyframes fallDown {
+      0% { bottom: 600px; opacity: 0; }
+      10% { opacity: 1; }
+      100% { bottom: 0; opacity: 1; }
+    }
+    .title-wrapper {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      gap: 0.25rem;
+    }
+    #priceNotification {
+      position: fixed;
+      bottom: 20px;
+      right: 20px;
+      background: linear-gradient(135deg, #1a1a3d, #4f46e5);
+      color: white;
+      padding: 1rem;
+      border-radius: 10px;
+      box-shadow: 0 0 20px rgba(79, 70, 229, 0.5);
+      max-width: 300px;
+      z-index: 1000;
+      display: none;
+      animation: slideIn 0.5s ease-out;
+    }
+    @keyframes slideIn {
+      from { transform: translateX(100%); opacity: 0; }
+      to { transform: translateX(0); opacity: 1; }
+    }
+    #priceNotification p {
+      margin: 0 0 1rem;
+      font-size: 0.9rem;
+    }
+    #priceNotification button {
+      padding: 0.5rem 1rem;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+      margin-right: 0.5rem;
+      font-weight: bold;
+    }
+    #allowBtn {
+      background: #4ade80;
+      color: #1a1a3d;
+    }
+    #closeBtn {
+      background: #f87171;
+      color: white;
+    }
+    
+.marquee-container {
+  top: 0;
+  left: 0;
+  width: 100%;
+  overflow: hidden;
+  background: rgba(0, 0, 0, 0.7);
+  z-index: 10;
+  height: 40px;
+  display: flex;
+  align-items: center;
+}
+
+.marquee {
+  display: inline-block;
+  white-space: nowrap;
+  font-size: 1.5rem;
+  font-weight: bold;
+  background-image: linear-gradient(90deg, #7e22ce, #4f46e5, #0ea5e9, #38bdf8, #7e22ce);
+  background-size: 300%;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  animation: galaxy-shimmer 4s infinite linear, marquee 15s linear infinite;
+  padding-right: 100%;
+}
+
+
+@keyframes marquee {
+  0% {
+    transform: translateX(100%);
+  }
+  100% {
+    transform: translateX(-100%);
+  }
+} /* Release
+  </style>
+  <title>UmbrioX (᪣UBX) - New cryptocurrency of the future</title>
+  <meta name="description" content="UmbrioX (᪣UBX) - innovative cryptocurrency on TON. Invest in the future with fast transactions and high security. Find out the price of UBX and join!" />
+  <meta name="keywords" content="UmbrioX, ᪣, UBX, cryptocurrency, TON, investments, blockchain, DeDust" />
+  <meta name="robots" content="index, follow" />
+  <meta name="author" content="B*HD™" />
+  <link rel="icon" type="image/png" href="/ico.png"/>
+  <link rel="canonical" href="https://umbriox.pp.ua/" />
+  <meta property="og:title" content="UmbrioX (UBX) - Cryptocurrency of the future" />
+  <meta property="og:description" content="Join us UmbrioX - Join UmbrioX - a new cryptocurrency on TON with low fees and high speed!" />
+  <meta property="og:image" content="https://umbriox.pp.ua/assets/UBX.gif" />
+  <meta property="og:image" content="https://mavox-id.github.io/UmbrioX/assets/UBX.gif" />
+  <meta property="og:url" content="https://umbriox.pp.ua/" />
+  <meta property="og:type" content="website" />
+  <meta name="twitter:card" content="summary_large_image" />
+  <meta name="twitter:title" content="UmbrioX (᪣UBX) - Cryptocurrency of the future" />
+  <meta name="twitter:description" content="UmbrioX (᪣UBX) on TON - Invest in the future!" />
+  <meta name="twitter:image" content="https://umbriox.pp.ua/assets/UBX.gif" />
+  <meta name="twitter:image" content="https://mavox-id.github.io/UmbrioX/assets/UBX.gif" />
+</head>
+<body>
+<div class="marquee-container">
+  <span class="marquee">UmbrioX token release was successful! Use cryptocurrency to its full potential!</span>
+</div>
+  <canvas class="starfield"></canvas>
+  <div class="content" style="position: relative; z-index: 1;">
+    <h1>
+      <span class="title-wrapper">
+        <span class="rocket" id="rocket">🚀</span>
+        <span class="galaxy-title">UmbrioX (᪣UBX)</span>
+      </span>
+    </h1>
+    <div style="text-align: center;">
+      <a href="https://blum.codes/token/umbriox" class="button" target="_blank">🔭 Watch on Blum</a>
+      <a href="https://umbriox.pp.ua/tbs/" class="button" target="_blank">🔥 Burn TON token</a>
+      <a href="https://umbriox.pp.ua/a/" class="button" target="_blank">🔰 Creators</a>
+      <br/>
+    </div>
+    <p style="text-align: center; font-size: 1.25rem; color: #d1d5db;">
+      Welcome to UmbrioX - the cryptocurrency created by B*HD™ 🚀
+    </p>
+    <div class="card">
+      <div style="text-align: center;">
+        <h2>Current price:</h2>
+        <p id="price" class="price">Loading...</p>
+        <p id="change" class="price-change"></p>
+      </div>
+      <canvas id="chart"></canvas>
+    </div>
+    <div class="about">
+      <h2 style="color: #d8b4fe; font-size: 1.75rem;">About UmbrioX</h2>
+      <p>UmbrioX is a cryptocurrency of a new era. It is created for those who are ready to go beyond the ordinary and explore the financial horizons of the future. The symbol ᪣ represents the mystery of this world.</p>
+      <p>UmbrioX (UBX), launched in 2025, offers reliable and fast transactions, scalability, and protection from quantum threats.</p>
+      <p>Support the development of the UmbrioX ecosystem and join our space journey!</p>
+    </div>
+  </div>
+  <div id="priceNotification">
+    <p>Stay updated with UBX price changes via notifications! Get real-time alerts when the price goes up or down. <a href="https://t.me/umbriox/22" target="_blank">About</a></p>
+    <button id="allowBtn">Allow</button>
+    <button id="closeBtn">Close</button>
+  </div>
+  <script>
+    const JETTON_ADDR = "EQDbgPoZT18lG0Pe3EXCMtnJyiUUM4IZZai9rQURaJh5ngRF";
+    const DEDUST_API = "https://api.dedust.io/v1/pools";
+    const TON_USD_API = "https://tonapi.io/v2/rates?tokens=ton&currencies=usd";
+
+    const priceElem = document.getElementById("price");
+    const changeElem = document.getElementById("change");
+    const ctx = document.getElementById('chart').getContext('2d');
+
+    let chart;
+
+    function initChart() {
+      chart = new Chart(ctx, {
+        type: 'line',
+        data: {
+          labels: [],
+          datasets: [{
+            label: 'Price USD',
+            data: [],
+            borderColor: '#4ade80',
+            backgroundColor: 'rgba(74, 222, 128, 0.3)',
+            fill: true,
+            tension: 0.2,
+            pointRadius: 0,
+            borderWidth: 2
+          }]
+        },
+        options: {
+          responsive: true,
+          animation: false,
+          scales: {
+            x: {
+              ticks: { color: 'white' },
+              grid: { color: 'rgba(255,255,255,0.1)' }
+            },
+            y: {
+              ticks: { color: 'white' },
+              grid: { color: 'rgba(255,255,255,0.1)' }
+            }
+          },
+          plugins: {
+            legend: { labels: { color: 'white' } }
+          }
+        }
+      });
+    }
+
+    function updateChart(priceUsd) {
+      console.log("Chart updated with price:", priceUsd);
+      const now = new Date();
+      const timeLabel = now.toLocaleTimeString([], {hour: '2-digit', minute: '2-digit'});
+
+      if (!chart) {
+        initChart();
+      }
+
+      chart.data.labels.push(timeLabel);
+      chart.data.datasets[0].data.push(priceUsd);
+
+      if (chart.data.labels.length > 24) {
+        chart.data.labels.shift();
+        chart.data.datasets[0].data.shift();
+      }
+
+      const data = chart.data.datasets[0].data;
+      if (data.length > 1) {
+        const prev = data[data.length - 2];
+        const curr = data[data.length - 1];
+        if (curr > prev) {
+          chart.data.datasets[0].borderColor = "#4ade80";
+          chart.data.datasets[0].backgroundColor = "rgba(74, 222, 128, 0.3)";
+        } else if (curr < prev) {
+          chart.data.datasets[0].borderColor = "#f87171";
+          chart.data.datasets[0].backgroundColor = "rgba(248, 113, 113, 0.3)";
+        } else {
+          chart.data.datasets[0].borderColor = "#ffffff";
+          chart.data.datasets[0].backgroundColor = "rgba(255, 255, 255, 0.3)";
+        }
+      }
+
+      chart.update();
+    }
+
+function getCookie(name) {
+  const value = `; ${document.cookie}`;
+  const parts = value.split(`; ${name}=`);
+  if (parts.length === 2) return parts.pop().split(';').shift();
+  return null;
+}
+
+function setCookie(name, value, days) {
+  const date = new Date();
+  date.setTime(date.getTime() + (days * 24 * 60 * 60 * 1000));
+  const expires = `expires=${date.toUTCString()}`;
+  document.cookie = `${name}=${value};${expires};path=/`;
+}
+
+    const notificationPopup = document.getElementById('priceNotification');
+    const allowBtn = document.getElementById('allowBtn');
+    const closeBtn = document.getElementById('closeBtn');
+
+    function showNotificationPopup() {
+      notificationPopup.style.display = 'block';
+    }
+
+    function hideNotificationPopup() {
+      notificationPopup.style.display = 'none';
+    }
+
+    if (!getCookie('notificationsAccepted')) {
+      let waitTime = parseInt(getCookie('notificationDelay')) || 60;
+      setTimeout(showNotificationPopup, waitTime * 1000);
+    }
+
+    allowBtn.addEventListener('click', () => {
+      hideNotificationPopup();
+      setCookie('notificationsAccepted', 'true', 365);
+      if ('Notification' in window && Notification.permission !== 'denied') {
+        Notification.requestPermission().then(permission => {
+          if (permission === 'granted') {
+            console.log('Notifications enabled');
+          }
+        });
+      }
+    });
+
+    closeBtn.addEventListener('click', () => {
+      hideNotificationPopup();
+      let currentDelay = parseInt(getCookie('notificationDelay')) || 60;
+      currentDelay += 300;
+      setCookie('notificationDelay', currentDelay, 365);
+    });
+
+    async function fetchData() {
+      try {
+        // HTTP in DeDust API
+        const dedustRes = await fetch(DEDUST_API);
+        console.log("Status DeDust API:", dedustRes.status);
+        if (!dedustRes.ok) {
+          throw new Error(`Error API DeDust: ${dedustRes.status}`);
+        }
+
+        const pools = await dedustRes.json();
+        console.log("Data on DeDust:", pools);
+
+        // Search in JETTON_ADDR
+        const pool = pools.find(p => 
+          p.token0.address === JETTON_ADDR || p.token1.address === JETTON_ADDR
+        );
+        if (!pool) {
+          throw new Error("Pool not found");
+        }
+        console.log("Search pool OK:", pool);
+
+        const tonUsdRes = await fetch(TON_USD_API);
+        console.log("Status tonapi.io:", tonUsdRes.status);
+        if (!tonUsdRes.ok) {
+        throw new Error(`Error API tonapi.io: ${tonUsdRes.status}`);
+        }
+
+        const tonUsdJson = await tonUsdRes.json();
+        console.log("Data on tonapi.io:", tonUsdJson);
+
+        if (!tonUsdJson.rates || !tonUsdJson.rates.TON || !tonUsdJson.rates.TON.prices.USD) {
+          throw new Error("Error data from tonapi.io");
+        }
+        const tonUsd = tonUsdJson.rates.TON.prices.USD;
+
+        const isToken0 = pool.token0.address === JETTON_ADDR;
+        const priceInTon = isToken0 ? parseFloat(pool.price0) : 1 / parseFloat(pool.price1 || 1);
+        if (isNaN(priceInTon) || !isFinite(priceInTon)) {
+          throw new Error("Incorrect pool price");
+        }
+        const priceUsd = priceInTon * tonUsd;
+
+        const lastPrice = parseFloat(localStorage.getItem("lastUsdPrice")) || priceUsd;
+
+        if (getCookie('notificationsAccepted') === 'true' && lastPrice !== priceUsd && 'Notification' in window && Notification.permission === 'granted') {
+          const changeUsd = priceUsd - lastPrice;
+          const changePercent = ((priceUsd - lastPrice) / lastPrice * 100).toFixed(2);
+          const direction = changeUsd > 0 ? '+' : '';
+          new Notification('UBX Price Update', {
+          body: `Current: $${priceUsd.toFixed(6)}\nPrevious: $${lastPrice.toFixed(6)}\nChange: ${direction}$${Math.abs(changeUsd).toFixed(6)} (${direction}${changePercent}%)`,
+          icon: '/ico.png'
+          });
+        }
+
+        priceElem.textContent = priceUsd.toFixed(6) + " USD";
+
+        if (priceUsd > lastPrice) {
+          priceElem.style.color = "#4ade80";
+        } else if (priceUsd < lastPrice) {
+          priceElem.style.color = "#f87171";
+        } else {
+          priceElem.style.color = "#ffffff";
+        }
+
+        const updated = pool.updatedAt ? new Date(pool.updatedAt * 1000) : new Date();
+        changeElem.textContent = "Updated: " + updated.toLocaleString("ru-RU");
+
+        localStorage.setItem("lastUsdPrice", priceUsd);
+
+        updateChart(priceUsd);
+      } catch (e) {
+        priceElem.textContent = "Error loading";
+        priceElem.style.color = "#f87171";
+        changeElem.textContent = "";
+        console.error("Error in fetchData:", e);
+      }
+    }
+
+    fetchData();
+    setInterval(fetchData, 10000);
+
+// --- Animation Star ---
+  const starCanvas = document.querySelector('.starfield');
+  const ctxStar = starCanvas.getContext('2d');
+
+  function randomRange(min, max) {
+    return Math.random() * (max - min) + min;
+  }
+
+  class Star {
+    constructor() {
+      this.reset(true);
+    }
+    reset(init = false) {
+      this.x = Math.random() * window.innerWidth;
+      this.y = Math.random() * window.innerHeight;
+      this.z = randomRange(0.5, 2.5);
+      this.alpha = init ? randomRange(0, 1) : 0;
+      this.alphaChange = randomRange(0.002, 0.007);
+      this.fadingIn = true;
+    }
+    update(dx, dy) {
+      this.x += dx * this.z;
+      this.y += dy * this.z;
+
+      if (this.x < 0) this.x = window.innerWidth;
+      if (this.x > window.innerWidth) this.x = 0;
+      if (this.y < 0) this.y = window.innerHeight;
+      if (this.y > window.innerHeight) this.y = 0;
+
+      if (this.fadingIn) {
+        this.alpha += this.alphaChange;
+        if (this.alpha >= 1) {
+          this.alpha = 1;
+          this.fadingIn = false;
+        }
+      } else {
+        this.alpha -= this.alphaChange;
+        if (this.alpha <= 0) {
+          this.alpha = 0;
+          this.reset();
+        }
+      }
+    }
+    draw(ctx) {
+      ctx.beginPath();
+      ctx.fillStyle = `rgba(255, 255, 255, ${this.alpha})`;
+      ctx.shadowColor = 'white';
+      ctx.shadowBlur = 4 * this.alpha;
+      ctx.arc(this.x, this.y, this.z, 0, Math.PI * 2);
+      ctx.fill();
+      ctx.shadowBlur = 0;
+    }
+  }
+
+  const stars = [];
+  const starCount = 200;
+
+  for (let i = 0; i < starCount; i++) {
+    stars.push(new Star());
+  }
+
+  let inputMode = 'mouse';
+  let dx = 0;
+  let dy = 0;
+
+  function resizeStarCanvas() {
+    starCanvas.width = window.innerWidth;
+    starCanvas.height = window.innerHeight;
+  }
+  window.addEventListener('resize', resizeStarCanvas);
+  resizeStarCanvas();
+
+  document.addEventListener('mousemove', (e) => {
+    inputMode = 'mouse';
+    const centerX = window.innerWidth / 2;
+    const centerY = window.innerHeight / 2;
+    dx = (e.clientX - centerX) * 0.001;
+    dy = (e.clientY - centerY) * 0.001;
+  });
+
+  window.addEventListener('deviceorientation', (event) => {
+    if (event.gamma !== null && event.beta !== null) {
+      inputMode = 'gyro';
+      dx = event.gamma * 0.05;
+      dy = event.beta * 0.05;
+    }
+  });
+
+  function animateStars() {
+    ctxStar.clearRect(0, 0, starCanvas.width, starCanvas.height);
+    stars.forEach((star) => {
+      star.update(dx, dy);
+      star.draw(ctxStar);
+    });
+    requestAnimationFrame(animateStars);
+  }
+
+  animateStars();
+
+    // --- Rocket ---
+    const rocket = document.getElementById('rocket');
+    let isLaunching = false;
+
+    rocket.addEventListener('click', () => {
+      if (isLaunching) return;
+      isLaunching = true;
+
+      rocket.classList.add('launch-up');
+
+      setTimeout(() => {
+        rocket.classList.remove('launch-up');
+        rocket.classList.add('hidden');
+      }, 3000);
+
+      setTimeout(() => {
+        rocket.classList.remove('hidden');
+        rocket.classList.add('fall-down');
+      }, 18000);
+
+      setTimeout(() => {
+        rocket.classList.remove('fall-down');
+        isLaunching = false;
+      }, 23000);
+    });
+  </script>
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-ZLTXQRVTMS"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'G-ZLTXQRVTMS');
+</script>
+</body>
+</html>
