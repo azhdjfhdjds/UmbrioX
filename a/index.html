@@ -39,7 +39,6 @@
       0% { background-position: 0%; }
       100% { background-position: 300%; }
     }
-    /* Стили для титров */
     .credits-container {
       position: relative;
       z-index: 1;
@@ -100,6 +99,13 @@
       100% { opacity: 0; }
     }
   </style>
+  <style>
+  /* M.V */
+  @keyframes scrollCreditsMobile {
+    0% { transform: translateY(100vh); }
+    100% { transform: translateY(-120%); } /* полностью уходит за экран */
+  }
+</style>
 </head>
 <body>
   <canvas class="starfield"></canvas>
@@ -246,5 +252,15 @@
       window.location.href = 'https://umbriox.pp.ua/';
     }, 35000);
   </script>
+  <script>
+  // M.V
+  const isMobile = /Android|iPhone|iPad|iPod|Opera Mini|IEMobile/i.test(navigator.userAgent);
+
+  if (isMobile) {
+    // Speed M.V
+    document.querySelector('.credits').style.animation =
+      'scrollCreditsMobile 25s linear 1s forwards, fadeOutCredits 3s linear 26s forwards';
+  }
+</script>
 </body>
 </html>
