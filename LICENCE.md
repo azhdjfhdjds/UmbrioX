@@ -1,5 +1,5 @@
-# 📜 B*HD Wallet License (BWL)
-**Version 1.0 — 2025**  
+# 📜 B-HD™ Wallet License (BWL)
+**Version 1.1 — 2025**  
 **Issued by B*HD™**
 
 ```
@@ -19,7 +19,7 @@ License Issued: 2025
 - GitHub License  
 - GitHub Site  
 
-> **All rights reserved to Sliz™**
+> **All rights reserved to B-HD™**
 
 ---
 
