@@ -128,7 +128,7 @@
   </div>
   <div class="btn-group">
     <button class="btn" onclick="window.location.href='https://umbriox.pp.ua/'">Return to site (EN)</button>
-    <button class="btn" onclick="window.location.href='https://umbriox.pp.ua/tbs/'">Burn a TON!</button>
+    <button class="btn" onclick="window.location.href='https://umbriox.pp.ua/tbs/'">Burn a TON</button>
     <button class="btn" onclick="window.location.href='https://umbriox.pp.ua/a/'">Creators</button>
     <button class="btn" onclick="location.reload()">Update site</button>
   </div>
@@ -234,7 +234,6 @@ digits.forEach((d, i) => {
     d.el.style.transform = `rotate(${d.angle}deg) translateX(160px) rotate(${-d.angle}deg)`;
 
     setTimeout(() => {
-      // Убираем transition, включаем бесконечную анимацию вращения через JS
       d.el.style.transition = 'none';
 
       let start = null;
