@@ -1,4 +1,4 @@
-# 🤝 CONTRIBUTION TO B*HD™ WM*M
+# 🤝 CONTRIBUTION TO B-HD™
 
 Welcome!
 We are glad that you are interested in participating in the **B*HD™** crypto infrastructure.
