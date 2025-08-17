@@ -211,11 +211,36 @@
   }
 } /* Release
 
+.galaxy-section {
+  background-color: #111827;
+  border-radius: 1rem;
+  padding: 2rem;
+  margin-top: 2rem;
+  max-width: 900px;
+  margin-left: auto;
+  margin-right: auto;
+  text-align: center;
+  position: relative;
+  overflow: hidden;
+}
+
+.galaxy-heading {
+  color: #d8b4fe;
+  font-size: 2rem;
+  margin-bottom: 0.5rem;
+}
+
+.galaxy-subtitle {
+  color: #9ca3af;
+  font-size: 1rem;
+  margin-bottom: 2rem;
+}
+
 #galaxy {
   position: relative;
   width: 600px;
   height: 600px;
-  margin: 2rem auto 0;
+  margin: 0 auto;
   border-radius: 50%;
 }
   </style>
@@ -267,11 +292,11 @@
       </div>
       <canvas id="chart"></canvas>
     </div>
-<div class="about">
-  <h2 style="color: #d8b4fe; font-size: 1.75rem;">UmbrioX Galaxy</h2>
-  <p>
-    Explore the cosmic network of UmbrioX across the universe of exchanges.  
-    Each planet represents a platform where UBX shines. Click a planet to start your journey 🚀
+<div class="about galaxy-section">
+  <h2 class="galaxy-heading">UmbrioX Galaxy</h2>
+  <p class="galaxy-subtitle">
+    Explore the cosmic network of UmbrioX across the universe of exchanges.<br>
+    Each planet represents a platform where UBX shines 🌌
   </p>
   <div id="galaxy"></div>
 </div>
@@ -633,7 +658,7 @@ const galaxy = document.getElementById("galaxy");
 
 // UmbrioX
 const center = document.createElement("div");
-center.innerHTML = "<img src='https://github.com/B-HDtm/UmbrioX/blob/main/ico.png' width='100'/>";
+center.innerHTML = "<img src='https://umbriox.pp.ua/ico.png' width='100'/>";
 center.style.position = "absolute";
 center.style.left = "50%";
 center.style.top = "50%";
