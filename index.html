@@ -681,18 +681,10 @@ const galaxy = document.getElementById("galaxy");
 
 const isMobile = window.innerWidth <= 768;
 
-const galaxySize = isMobile ? 250 : 600;
+const galaxySize = isMobile ? 300 : 600;
 galaxy.style.width = galaxySize + "px";
 galaxy.style.height = galaxySize + "px";
-
-// UmbrioX
-const center = document.createElement("div");
-center.innerHTML = "<img src='https://umbriox.pp.ua/ico.png' width='100'/>";
-center.style.position = "absolute";
-center.style.left = "50%";
-center.style.top = "50%";
-center.style.transform = "translate(-50%, -50%)";
-galaxy.appendChild(center);
+galaxy.style.margin = "0 auto";
 
 // DEX
 const exchanges = [
@@ -702,6 +694,7 @@ const exchanges = [
 ];
 
 const orbitBase = isMobile ? 80 : 200;
+const planetSize = isMobile ? 35 : 50;
 
 exchanges.forEach((ex, i) => {
   const angle = (i / exchanges.length) * 2 * Math.PI;
@@ -711,13 +704,13 @@ exchanges.forEach((ex, i) => {
   planet.href = ex.url;
   planet.target = "_blank";
   planet.style.position = "absolute";
-  planet.style.width = "50px";
-  planet.style.height = "50px";
+  planet.style.width = planetSize + "px";
+  planet.style.height = planetSize + "px";
   planet.style.left = "50%";
   planet.style.top = "50%";
   planet.style.transform = `translate(${orbit * Math.cos(angle)}px, ${orbit * Math.sin(angle)}px)`;
   planet.innerHTML = `<img src="${ex.img}" title="${ex.name}" 
-    style="width:100%;height:100%;border-radius:50%;box-shadow:0 0 15px white;">`;
+    style="width:100%;height:100%;border-radius:50%;box-shadow:0 0 10px white;">`;
 
   galaxy.appendChild(planet);
 
