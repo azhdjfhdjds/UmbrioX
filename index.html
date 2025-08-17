@@ -3,10 +3,8 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>UmbrioX (᪣UBX)</title>
-  // Version 550.40 (For Google Search Console)
-  // Created by B-HDtm (Do not copy all code! Only 1 part of code)
-  <link rel="icon" type="image/png" href="/ico.png"/>
+  <title>UmbrioX (᪣UBX)</title> // Version 550.41 (For Google Search Console)
+  <link rel="icon" type="image/png" href="/ico.png"/> // Created by B-HD™ (Do not copy all code! Only 1 part of code)
   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
   <style>
     body {
@@ -212,6 +210,44 @@
     transform: translateX(-100%);
   }
 } /* Release
+
+.exchange-section {
+  background-color: #111827;
+  border-radius: 1rem;
+  padding: 2rem;
+  margin-top: 2rem;
+  max-width: 900px;
+  margin-left: auto;
+  margin-right: auto;
+  text-align: center;
+  position: relative;
+  z-index: 1;
+}
+
+.exchange-title {
+  color: #d8b4fe;
+  font-size: 1.75rem;
+  margin-bottom: 0.5rem;
+}
+
+.exchange-desc {
+  color: #9ca3af;
+  font-size: 1rem;
+  margin-bottom: 1.5rem;
+}
+
+#galaxy {
+  position: relative;
+  width: 600px;
+  height: 600px;
+  margin: 0 auto;
+  border-radius: 50%;
+  overflow: visible;
+}
+
+#galaxy img {
+  pointer-events: none;
+}
   </style>
   <title>UmbrioX (᪣UBX) - New cryptocurrency of the future</title>
   <meta name="description" content="UmbrioX (᪣UBX) - innovative cryptocurrency on TON. Invest in the future with fast transactions and high security. Find out the price of UBX and join!" />
@@ -251,7 +287,7 @@
       <br/>
     </div>
     <p style="text-align: center; font-size: 1.25rem; color: #d1d5db;">
-      Welcome to UmbrioX - the cryptocurrency created by B*HD™ 🚀
+      Welcome to UmbrioX - the cryptocurrency created by B-HD™ 🚀
     </p>
     <div class="card">
       <div style="text-align: center;">
@@ -261,7 +297,15 @@
       </div>
       <canvas id="chart"></canvas>
     </div>
-    <div id="galaxy"></div>
+    <div class="exchange-section">
+  <h2 class="exchange-title">UmbrioX Galaxy of Exchanges</h2>
+  <p class="exchange-desc">
+    Explore all the places where UmbrioX shines in the crypto universe. 
+    Click on an exchange to trade or learn more!
+  </p>
+  
+  <div id="galaxy"></div>
+</div>
     <div class="about">
       <h2 style="color: #d8b4fe; font-size: 1.75rem;">About UmbrioX</h2>
       <p>UmbrioX is a cryptocurrency of a new era. It is created for those who are ready to go beyond the ordinary and explore the financial horizons of the future. The symbol ᪣ represents the mystery of this world.</p>
@@ -613,17 +657,13 @@ function setCookie(name, value, days) {
       }, 23000);
     });
   </script>
+
 <script>
 const galaxy = document.getElementById("galaxy");
-galaxy.style.position = "relative";
-galaxy.style.width = "600px";
-galaxy.style.height = "600px";
-galaxy.style.margin = "2rem auto";
-galaxy.style.borderRadius = "50%";
-galaxy.style.overflow = "visible";
 
+// UmbrioX
 const center = document.createElement("div");
-center.innerHTML = "<img src='https://umbriox.pp.ua/assets/UBX.gif' width='100'/>";
+center.innerHTML = "<img src='https://github.com/B-HDtm/UmbrioX/blob/main/ico.png' width='100'/>";
 center.style.position = "absolute";
 center.style.left = "50%";
 center.style.top = "50%";
@@ -634,13 +674,24 @@ galaxy.appendChild(center);
 const exchanges = [
   {name: "DeDust", url: "https://dedust.io", img: "https://dedust.io/favicon.ico"},
   {name: "STON.fi", url: "https://ston.fi", img: "https://ston.fi/favicon.ico"},
-  {name: "Blum", url: "https://blum.codes", img: "https://blum.codes/favicon.ico"},
   {name: "Tonkeeper", url: "https://tonkeeper.com", img: "https://tonkeeper.com/favicon.ico"},
 ];
 
 exchanges.forEach((ex, i) => {
   const angle = (i / exchanges.length) * 2 * Math.PI;
-  const orbit = 200; // радиус орбиты
+  const orbit = 200;
+
+  const line = document.createElement("div");
+  line.style.position = "absolute";
+  line.style.left = "50%";
+  line.style.top = "50%";
+  line.style.width = orbit + "px";
+  line.style.height = "2px";
+  line.style.background = "linear-gradient(to right, #7e22ce, #4f46e5, #0ea5e9)";
+  line.style.transformOrigin = "left center";
+  line.style.transform = `rotate(${angle}rad)`;
+  line.style.opacity = "0.7";
+  galaxy.appendChild(line);
 
   const planet = document.createElement("a");
   planet.href = ex.url;
@@ -652,8 +703,8 @@ exchanges.forEach((ex, i) => {
   planet.style.left = "50%";
   planet.style.top = "50%";
   planet.style.transform = `translate(${orbit * Math.cos(angle)}px, ${orbit * Math.sin(angle)}px)`;
-  planet.style.transition = "transform 0.5s linear";
-  planet.innerHTML = `<img src="${ex.img}" title="${ex.name}" style="width:100%;height:100%;border-radius:50%;box-shadow:0 0 10px white;">`;
+  planet.innerHTML = `<img src="${ex.img}" title="${ex.name}" 
+    style="width:100%;height:100%;border-radius:50%;box-shadow:0 0 15px white;">`;
 
   galaxy.appendChild(planet);
 
@@ -661,16 +712,9 @@ exchanges.forEach((ex, i) => {
   setInterval(() => {
     a += 0.01;
     planet.style.transform = `translate(${orbit * Math.cos(a)}px, ${orbit * Math.sin(a)}px)`;
+    line.style.transform = `rotate(${a}rad)`;
   }, 50);
 });
-</script>
-<script async src="https://www.googletagmanager.com/gtag/js?id=G-ZLTXQRVTMS"></script>
-<script>
-  window.dataLayer = window.dataLayer || [];
-  function gtag(){dataLayer.push(arguments);}
-  gtag('js', new Date());
-
-  gtag('config', 'G-ZLTXQRVTMS');
 </script>
 </body>
 </html>
