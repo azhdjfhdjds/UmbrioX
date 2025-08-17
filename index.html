@@ -679,6 +679,12 @@ function setCookie(name, value, days) {
 <script>
 const galaxy = document.getElementById("galaxy");
 
+const isMobile = window.innerWidth <= 768;
+
+const galaxySize = isMobile ? 250 : 600;
+galaxy.style.width = galaxySize + "px";
+galaxy.style.height = galaxySize + "px";
+
 // UmbrioX
 const center = document.createElement("div");
 center.innerHTML = "<img src='https://umbriox.pp.ua/ico.png' width='100'/>";
@@ -695,9 +701,11 @@ const exchanges = [
   {name: "Tonkeeper", url: "https://tonkeeper.com", img: "https://tonkeeper.com/favicon.ico"},
 ];
 
+const orbitBase = isMobile ? 80 : 200;
+
 exchanges.forEach((ex, i) => {
   const angle = (i / exchanges.length) * 2 * Math.PI;
-  const orbit = 200;
+  const orbit = orbitBase;
 
   const planet = document.createElement("a");
   planet.href = ex.url;
