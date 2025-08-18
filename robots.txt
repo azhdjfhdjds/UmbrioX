@@ -1,3 +1,21 @@
+# 📌 robots.txt for UmbrioX
+# Blocks images from being indexed in Google Images
+
+# Google Images (404, Block)
+User-agent: Googlebot-Image
+Disallow: /
+
+# BIT (All)
 User-agent: *
+Disallow: /*.jpg$
+Disallow: /*.jpeg$
+Disallow: /*.png$
+Disallow: /*.gif$
+Disallow: /*.webp$
+Disallow: /*.svg$
+
+# OK
 Allow: /
+
+# 📍 Sitemap
 Sitemap: https://umbriox.pp.ua/sitemap.xml
