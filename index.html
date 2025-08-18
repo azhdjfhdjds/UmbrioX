@@ -687,8 +687,8 @@ centralPlanet.style.height = centralSize + "px";
 centralPlanet.style.left = "50%";
 centralPlanet.style.top = "50%";
 centralPlanet.style.transform = "translate(-50%, -50%)";
-centralPlanet.innerHTML = `<img src="https://umbriox.pp.ua/ico.png" 
-style="width:100%; height:100%; border-radius:50%;">`;
+centralPlanet.innerHTML = `<img src="https://github.com/Mavox-ID/NEXT-Site/blob/main/icoicoP.png" 
+style="width:100%; height:100%; border-radius:50%; box-shadow:0 0 15px rgba(168,85,247,0.7);">`;
 centralPlanet.style.pointerEvents = "none";
 
 galaxy.appendChild(centralPlanet);
@@ -718,7 +718,7 @@ exchanges.forEach((ex, i) => {
   planet.style.transform = `translate(-50%, -50%) translate(${orbit * Math.cos(angle)}px, ${orbit * Math.sin(angle)}px)`;
 
   planet.innerHTML = `<img src="${ex.img}" title="${ex.name}" 
-    style="width:100%;height:100%;border-radius:50%;box-shadow:0 0 10px white;">`;
+    style="width:100%;height:100%;border-radius:50%;box-shadow:0 0 10px rgba(168,85,247,0.7));">`;
 
   galaxy.appendChild(planet);
 
