@@ -678,6 +678,21 @@ galaxy.style.width = galaxySize + "px";
 galaxy.style.height = galaxySize + "px";
 galaxy.style.margin = "0 auto";
 
+// UmbrioX
+const centralPlanet = document.createElement("div");
+const centralSize = isMobile ? 50 : 80;
+centralPlanet.style.position = "absolute";
+centralPlanet.style.width = centralSize + "px";
+centralPlanet.style.height = centralSize + "px";
+centralPlanet.style.left = "50%";
+centralPlanet.style.top = "50%";
+centralPlanet.style.transform = "translate(-50%, -50%)";
+centralPlanet.innerHTML = `<img src="https://umbriox.pp.ua/ico.png" 
+style="width:100%; height:100%; border-radius:50%;">`;
+centralPlanet.style.pointerEvents = "none";
+
+galaxy.appendChild(centralPlanet);
+
 // DEX
 const exchanges = [
   {name: "DeDust", url: "https://dedust.io", img: "https://dedust.io/favicon.ico"},
@@ -698,7 +713,6 @@ exchanges.forEach((ex, i) => {
   planet.style.position = "absolute";
   planet.style.width = planetSize + "px";
   planet.style.height = planetSize + "px";
-
   planet.style.left = "50%";
   planet.style.top = "50%";
   planet.style.transform = `translate(-50%, -50%) translate(${orbit * Math.cos(angle)}px, ${orbit * Math.sin(angle)}px)`;
